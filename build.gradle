@@ -1,0 +1,19 @@
+// Configuración común para todos los subproyectos
+allprojects {
+    group = 'com.juan'
+    version = '0.0.1-SNAPSHOT'
+}
+
+// Configuración para subproyectos
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+    }
+
+    // Configuración común de dependencias si es necesario
+    dependencies {
+        // Dependencias comunes aquí
+    }
+}
