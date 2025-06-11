@@ -4,15 +4,18 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="IDE">
+            <builds>
+              <build path="$PROJECT_DIR$/eureka-server" name="eureka-server" />
+              <build path="$PROJECT_DIR$/gateway-service" name="gateway-service" />
+            </builds>
+          </compositeBuild>
+        </compositeConfiguration>
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/eureka-server" />
-            <option value="$PROJECT_DIR$/gateway-service" />
-            <option value="$PROJECT_DIR$/inventory-service" />
-            <option value="$PROJECT_DIR$/order-service" />
-            <option value="$PROJECT_DIR$/product-service" />
           </set>
         </option>
       </GradleProjectSettings>
