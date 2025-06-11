@@ -4,7 +4,6 @@ allprojects {
     version = '0.0.1-SNAPSHOT'
 }
 
-// Configuración para subproyectos
 subprojects {
     apply plugin: 'java'
 
@@ -12,8 +11,6 @@ subprojects {
         mavenCentral()
     }
 
-    // Configuración común de dependencias si es necesario
     dependencies {
-        // Dependencias comunes aquí
     }
 }

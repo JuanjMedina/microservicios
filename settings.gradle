@@ -3,3 +3,5 @@ rootProject.name = "microservices-project"
 include("product-service")
 include("inventory-service")
 include("order-service")
+include('gateway-service')
+include('eureka-server')
