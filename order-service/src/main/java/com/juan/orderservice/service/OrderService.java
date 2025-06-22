@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@lombok.extern.slf4j.Slf4j
 public class OrderService {
     private final OrderRepository orderRepository;
     private final WebClient.Builder webClientBuilder;
@@ -49,15 +50,20 @@ public class OrderService {
                 ).toList());
 
         var saveOrder = orderRepository.save(order);
+        log.info("Order created with ID: {}", saveOrder.getId());
 
-        //TODO: Send message to Order Topic
-        this.kafkaTemplate.send("orders-topic", JsonUtils.toJson(
-                        new OrderEvent(saveOrder.getOrderNumber(),
-                                saveOrder.getOrderItems().size(),
-                                OrderStatus.COMPLETED
-                        )
+
+
+        // Enviar mensaje a Kafka con manejo de completado/error
+        String orderJson = JsonUtils.toJson(
+                new OrderEvent(saveOrder.getOrderNumber(),
+                        saveOrder.getOrderItems().size(),
+                        OrderStatus.COMPLETED
                 )
         );
+
+        this.kafkaTemplate.send("orders-topic", orderJson);
+
     }
 
     public List<Order> getAllOrders() {

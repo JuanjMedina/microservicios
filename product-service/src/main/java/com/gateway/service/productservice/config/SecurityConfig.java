@@ -1,4 +1,4 @@
-package com.juan.inventoryservice.config;
+package com.gateway.service.productservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
