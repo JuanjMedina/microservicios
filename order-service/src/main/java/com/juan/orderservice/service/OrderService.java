@@ -1,11 +1,15 @@
 package com.juan.orderservice.service;
 
+import com.juan.orderservice.enums.OrderStatus;
+import com.juan.orderservice.event.OrderEvent;
 import com.juan.orderservice.model.dtos.BaseResponse;
 import com.juan.orderservice.model.dtos.OrderItemRequest;
 import com.juan.orderservice.model.dtos.OrderRequest;
 import com.juan.orderservice.model.entities.Order;
 import com.juan.orderservice.model.entities.OrderItems;
 import com.juan.orderservice.repositories.OrderRepository;
+import com.juan.orderservice.utils.JsonUtils;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -16,10 +20,12 @@ import java.util.UUID;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final WebClient.Builder webClientBuilder;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public OrderService(OrderRepository orderRepository, WebClient.Builder webClientBuilder) {
+    public OrderService(OrderRepository orderRepository, WebClient.Builder webClientBuilder, KafkaTemplate<String, String> kafkaTemplate) {
         this.orderRepository = orderRepository;
         this.webClientBuilder = webClientBuilder;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
 
@@ -42,7 +48,16 @@ public class OrderService {
                 .map(orderItemRequest -> mapOrderRequestToOrderItems(orderItemRequest, order)
                 ).toList());
 
-        orderRepository.save(order);
+        var saveOrder = orderRepository.save(order);
+
+        //TODO: Send message to Order Topic
+        this.kafkaTemplate.send("orders-topic", JsonUtils.toJson(
+                        new OrderEvent(saveOrder.getOrderNumber(),
+                                saveOrder.getOrderItems().size(),
+                                OrderStatus.COMPLETED
+                        )
+                )
+        );
     }
 
     public List<Order> getAllOrders() {
